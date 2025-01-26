@@ -1,0 +1,50 @@
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: 'root'
+      POSTGRES_PASSWORD: 'root'
+      POSTGRES_DB: 'green_taxi'
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./data/green_taxi_postgres_data:/var/lib/postgresql/data
+    networks:
+      - pg-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "8080:80"
+    volumes:
+      - vol-pgadmin_data:/var/lib/pgadmin  
+    networks:
+      - pg-network
+    depends_on:
+      - postgres
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:80/ || exit 1"]
+      start_period: 10s
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    restart: on-failure
+
+volumes:
+  vol-pgadmin_data:
+
+networks:
+  pg-network:
+    external: true
