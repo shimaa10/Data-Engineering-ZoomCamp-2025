@@ -1,0 +1,14 @@
+{
+    "Servers": {
+      "1": {
+        "Name": "Local Database",
+        "Group": "Servers",
+        "Host": "postgres",
+        "Port": 5432,
+        "MaintenanceDB": "kestra",
+        "Username": "kestra",
+        "SSLMode": "prefer",
+        "PassFile": "/pgadmin4/pgpassfile"
+      }
+    }
+  }
